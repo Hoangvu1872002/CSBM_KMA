@@ -5,6 +5,7 @@ import {
   Button,
   InputField,
   Modal,
+  ModalInf,
   PersonalInfo,
   TableAuthorization,
   TableInfo,
@@ -18,6 +19,7 @@ const Home = () => {
   );
 
   const [dataTableInfoUsers, setDataTableInfoUsers] = useState();
+  const [isShowModalInf, setIsShowModalInf] = useState();
   const [dataTableInfoUsersSearch, setDataTableInfoUsersSearch] = useState();
   const [dataTableAuthorization, setDataTableAuthorization] = useState();
   const [individual, setIndividual] = useState();
@@ -45,7 +47,9 @@ const Home = () => {
   const fetchDataUsers = useCallback(async () => {
     if (citizenIdentificationNumber) {
       const rs = await DataSevices.getDataUsers(citizenIdentificationNumber);
-      setDataTableInfoUsers(rs?.data?.listDataUser);
+      if (rs?.data.listDataUser) {
+        setDataTableInfoUsers(rs?.data.listDataUser);
+      }
       // setIndividual(rs?.data?.individual);
     }
   }, [citizenIdentificationNumber]);
@@ -109,20 +113,21 @@ const Home = () => {
         <Header data={individual?.name}></Header>
       </div>
       <div className="flex w-full pt-5">
-        <div className="w-1/4 pl-5 pt-2">
+        <div className="w-[30%] pl-5 pt-2">
           <PersonalInfo data={individual}></PersonalInfo>
         </div>
-        <div className="px-5 w-3/4">
+        <div className="px-5 w-[70%]">
           <div className="w-full flex justify-between">
             <div className="flex gap-3">
-              <InputField
-                nameKey={"citizenIdentificationNumber"}
-                value={search?.citizenIdentificationNumber}
-                setValue={setSearch}
-                style="w-[350px]"
-                placeholder="Search citizen identification number..."
-                isShowLaybel
-              ></InputField>
+              <div className="w-[350px]">
+                <InputField
+                  nameKey={"citizenIdentificationNumber"}
+                  value={search?.citizenIdentificationNumber}
+                  setValue={setSearch}
+                  placeholder="Search citizen identification number..."
+                  isShowLaybel
+                ></InputField>
+              </div>
               <Button handleOnClick={handeleSearch}>Search</Button>
             </div>
             <div className=" flex gap-2">
@@ -140,9 +145,14 @@ const Home = () => {
           </div>
           {showTable ? (
             <TableInfo
+              setIsShowModalInf={setIsShowModalInf}
               data={
                 dataTableInfoUsersSearch
-                  ? dataTableInfoUsersSearch
+                  ? dataTableInfoUsersSearch?.filter(
+                      (e) =>
+                        e.citizenIdentificationNumber !==
+                        individual.citizenIdentificationNumber
+                    )
                   : dataTableInfoUsers?.filter(
                       (e) =>
                         e.citizenIdentificationNumber !==
@@ -172,6 +182,14 @@ const Home = () => {
             individual={individual}
             setResetData={setResetData}
           ></Modal>
+        </div>
+      )}
+      {isShowModalInf && (
+        <div>
+          <ModalInf
+            setIsShowModalInf={setIsShowModalInf}
+            isShowModalInf={isShowModalInf}
+          ></ModalInf>
         </div>
       )}
       <div className="absolute bottom-0 w-full">

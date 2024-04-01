@@ -26,7 +26,7 @@ const InputField = ({
       <input
         type={type || "text"}
         className={clsx(
-          `px-4 py-2 rounded-sm border w-full mt-2 placeholder:italic placeholder:text-sm outline-none`,
+          `px-4 py-2 rounded-sm border w-full mt-2 placeholder:italic placeholder:text-sm outline-none `,
           style
         )}
         placeholder={placeholder || nameKey?.slice(0, 1).toUpperCase() + nameKey?.slice(1)}

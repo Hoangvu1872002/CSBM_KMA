@@ -1,26 +1,35 @@
 import React, { useEffect, useState } from "react";
 import DataSevices from "../services/dataServices";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import { reverseTransformData, transformData } from "../ultils/helper";
-
+import Swal from "sweetalert2";
 
 const TableAuthorization = ({ data, individual, setResetData }) => {
   const transformedData = transformData(data);
 
   const [editElm, setEditElm] = useState();
 
-  const handleDeleteAuth = async(id_others) => {
-    const rs = await DataSevices.deleteDecentralization({
-      id_main: individual.citizenIdentificationNumber,
-      id_others,
+  const handleDeleteAuth = async (id_others) => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "Are you sure remove this decentralization.",
+      icon: "warning",
+      showCancelButton: true,
+    }).then(async (rs) => {
+      if (rs.isConfirmed) {
+        const rs = await DataSevices.deleteDecentralization({
+          id_main: individual.citizenIdentificationNumber,
+          id_others,
+        });
+        if (rs.data.success) {
+          toast.success(rs.data.mes);
+          setResetData((prev) => !prev);
+        } else {
+          toast.error(rs.data.mes);
+        }
+      }
     });
-    if (rs.data.success) {
-      toast.success(rs.data.mes);
-      setResetData((prev) => !prev);
-    } else {
-      toast.error(rs.data.mes);
-    }
   };
 
   // Khởi tạo state để theo dõi trạng thái của các checkbox
@@ -37,8 +46,8 @@ const TableAuthorization = ({ data, individual, setResetData }) => {
   };
 
   useEffect(() => {
-    setCheckboxValues(transformedData)
-  },[transformedData?.length])
+    setCheckboxValues(transformedData);
+  }, [transformedData?.length]);
 
   const handleUpdate = async (data, id_main, id_others) => {
     const dataChange = reverseTransformData(data, id_main);
@@ -221,10 +230,12 @@ const TableAuthorization = ({ data, individual, setResetData }) => {
             ))}
           </tbody>
         </table>
+        {data?.length === 0 && (
+          <div className="font-bold text-xl flex justify-center items-center text-gray-700">
+            <h3>Table has no data.</h3>
+          </div>
+        )}
       </div>
-      {/* <div className="w-full">
-        <AddAuthorization></AddAuthorization>
-      </div> */}
       <ToastContainer autoClose={1000} />
     </div>
   );

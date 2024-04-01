@@ -55,6 +55,7 @@ const Modal = ({
       { ...dataUpdateAuth, id_others: idUserAddAuth },
       individual.citizenIdentificationNumber
     );
+    console.log(dataChange);
     if (dataChange) {
       const rs = await DataSevices.addDecentralization(dataChange);
       if (rs.data.success) {
@@ -82,14 +83,15 @@ const Modal = ({
                 Enter the ID card number of the person you want to authorize:
               </span>
               <div className=" flex gap-2">
-                <InputField
-                  nameKey={"citizenIdentificationNumber"}
-                  value={userAuthSearch?.citizenIdentificationNumber}
-                  setValue={setUserAuthSearch}
-                  style="w-[450px]"
-                  placeholder="Search citizen identification number..."
-                  isShowLaybel
-                ></InputField>
+                <div className="w-[400px]">
+                  <InputField
+                    nameKey={"citizenIdentificationNumber"}
+                    value={userAuthSearch?.citizenIdentificationNumber}
+                    setValue={setUserAuthSearch}
+                    placeholder="Search citizen identification number..."
+                    isShowLaybel
+                  ></InputField>
+                </div>
                 <Button
                   handleOnClick={() =>
                     handleSearchAddAuth(
@@ -101,7 +103,11 @@ const Modal = ({
                 </Button>
               </div>
             </div>
-            {mesSearch && <div className="flex justify-center items-center">{mesSearch}</div>}
+            {mesSearch && (
+              <div className="flex justify-center items-center">
+                {mesSearch}
+              </div>
+            )}
             {!mesSearch && (
               <div className="flex flex-col gap-4">
                 <div className=" flex flex-col gap-5">

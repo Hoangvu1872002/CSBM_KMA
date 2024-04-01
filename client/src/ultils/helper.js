@@ -48,7 +48,7 @@ export const reverseTransformData = (data, id_main) => {
     if (key !== "id_others" && data[key] === true) {
       reversedData.push({
         id_main: id_main,
-        column: key,
+        columnName: key,
         id_others: data.id_others,
       });
     }
@@ -62,11 +62,11 @@ export const transformData = (data) => {
 
   data.forEach((item) => {
     if (newData[item.id_others]) {
-      newData[item.id_others][item.column] = true;
+      newData[item.id_others][item.columnName] = true;
     } else {
       newData[item.id_others] = {
         id_others: item.id_others,
-        [item.column]: true,
+        [item.columnName]: true,
       };
     }
   });

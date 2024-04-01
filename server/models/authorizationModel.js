@@ -6,7 +6,7 @@ const authorizationSchema = new schema({
     type: String,
     require: true,
   },
-  column: {
+  columnName: {
     type: String,
     require: true,
   },
